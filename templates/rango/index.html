@@ -14,6 +14,7 @@
       <em>{{boldmessage}}</em><br />
     </div>
 
+    <h2>Most Liked Categories</h2>
     {% if categories %}
     <ul>
       {% for category in categories %}
@@ -24,9 +25,27 @@
       <strong>There are no categories present</strong>
     {%endif%}
 
+
+    <h2>Most Viewed pages</h2>
+    {% if top_pages %}
+      <ul>
+        {%for page in top_pages %}
+        <li>
+          <a href = "{{page.url}}"> {{page.title}} </a>
+        </li>
+    {%endfor%}
+    {%else%}
+    <h2>No pages available :( </h2>
+    {%endif%}
+      </ul>
+        
+
+
+
     <div><a href="/rango/about"> About </a><br />
         <img src = "{% static "images/rango_mascot.jpg" %}"
         alt = "Rango: a green lizad"/>
+        <a href = {% url 'add_category'%}> Add a new Category</a>
     </div>
   </body>
 </html>

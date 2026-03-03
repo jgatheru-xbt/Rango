@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rango</title>
+  </head>
+  <body>
+    <h1>Add Page in {{category.name}}</h1>
+
+    <div>
+        <form id = "category" method = "POST" action = "{% url 'add_page' category.slug%}">
+            {% csrf_token %}
+
+            {%if category%}
+                {%for value in form.hidden_fields%}
+                    {{value}}
+                {%endfor%}
+
+                {%for field in form.visible_fields%}
+                    {{field.errors}}
+                    {{field.help_text}}
+                    {{field}}
+                {%endfor%}
+            {%else%}
+                <h2>No such category exists</h2>
+            {%endif%}
+            <br/>
+            <br/>
+            <input type = "submit" name = "add_page_btn" name = "add_page_btn" ><br/>
+    <a href = "{% url 'show_category' category.slug %}"> Back to category</a>
+    </div>
+  </body>
+</html>
