@@ -1,7 +1,8 @@
-# Here, you store your applications data models -> where you specify the entities and relationships between data 
+# Here, you store your applications data models -> where you specify the entities and relationships between data
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length = 128, unique = True)
@@ -19,7 +20,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 
 class Page(models.Model):
@@ -32,3 +33,16 @@ class Page(models.Model):
 
 def __str__(self):
         return self.title
+
+
+
+class UserProfile(models.Model):
+    #line below is essential to link UserProfile to a user model instance
+    user = models.OneToOneField(User, on_delete=models.CASCADE )
+
+    #additional attributes we wish to include into inbuilt user model
+    website = models.URLField(blank = True)
+    picture = models.ImageField(upload_to = 'profile_images', blank = True)
+
+    def __str__(self):
+        return self.user.username

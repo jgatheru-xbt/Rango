@@ -1,7 +1,7 @@
 # Register your models here so that you can benefit from Django admin interface.
 
 from django.contrib import admin
-from rango.models import Category, Page
+from rango.models import UserProfile, Category, Page
 
 
 
@@ -13,3 +13,4 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Page)
+admin.site.register(UserProfile)

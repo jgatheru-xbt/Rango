@@ -1,8 +1,11 @@
-# here you store a series of functions to handle requests and return responses  
+# here you store a series of functions to handle requests and return responses
 from django.shortcuts import render #streamlines the process of combining given template with a context dictionary.Automates a threee step process i.e, loading the template, merging data into it and creating the HttpResponse object.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from rango.forms import CategoryForm, PageForm, UserProfileForm, UserForm
+from django.urls import reverse
 
 def index(request):
 
@@ -19,7 +22,7 @@ def index(request):
 def show_category(request, category_name_slug):
     context_dict = {}
     try:
-        category = Category.objects.get(slug = category_name_slug) #.get() method commonly used with dictionary objects has the parameters :key, default_value, 
+        category = Category.objects.get(slug = category_name_slug) #.get() method commonly used with dictionary objects has the parameters :key, default_value,
         pages = Page.objects.filter(category = category)
         context_dict['pages'] = pages
         context_dict['category'] = category
@@ -74,5 +77,68 @@ def add_page(request, category_name_slug):
 
     return render(request, 'rango/add_page.html', context_dict)
 
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(data = request.POST)
+        profile_form = UserProfileForm(data = request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit = False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            registered = True
+
+        else:
+            print(user_form.errors, profile_form.errors)
+
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request,'rango/register.html', {'user_form':user_form,
+                                                'profile_form': profile_form,
+                                                'registered' : registered})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username = username, password = password)#returns a user object if one is found and None if none exists
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))#httpresponseredirect class tells the client's web browser to redirect to the URL you provide as the argument
+            else:
+                return HttpResponse('Your Rango Account is Disabled')
+        else:
+            print(f"Invalid login details:{username}, {password}")
+            return HttpResponse("Invalid login details supplied")
+    else:
+        return render(request, 'rango/login.html', {})
+
 def about(request):
-    return HttpResponse('this is the about page <br> Go back to home  http://127.0.0.1:8000/rango/')
+    return render(request, 'rango/about.html', {})
+
+@login_required
+def restricted(request):
+    return HttpResponse('You are logged in pal')
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('index'))

@@ -1,6 +1,7 @@
 # usings separate forms module helps make codebase tidier and easier to work with.
-from django import forms 
-from rango.models import Category, Page
+from django import forms
+from django.contrib.auth.models import User
+from rango.models import UserProfile, Category, Page
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length = 128, help_text = "Please enter the category name...")
@@ -8,9 +9,9 @@ class CategoryForm(forms.ModelForm):
     likes = forms.IntegerField(widget = forms.HiddenInput(), initial = 0)
     slug = forms.CharField(widget = forms.HiddenInput(), required = False )
 
-    # an inline class to provide more information on the form 
+    # an inline class to provide more information on the form
     class Meta:
-        # provide an association between the ModelForm and a model 
+        # provide an association between the ModelForm and a model
         model = Category
         fields = ('name', )
 
@@ -25,11 +26,36 @@ class PageForm(forms.ModelForm):
 
         if url and not url.startswith('http://'):
             url = 'http://' + url
-            cleaned_data['url'] = url 
+            cleaned_data['url'] = url
             return cleaned_data
-        
-        
+
+
     class Meta:
-        # provide an association between the ModelForm and a model 
+        # provide an association between the ModelForm and a model
         model = Page
         exclude = ('category', )
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget = forms.PasswordInput())
+    # password = forms.PasswordInput()
+    # u_email = forms.EmailField()
+    # f_name = forms.CharField()
+    # s_name = forms.CharField()
+
+    class Meta():
+        model = User
+        fields = ('username', 'email', 'password')
+
+
+class UserProfileForm(forms.ModelForm):
+    # url = forms.URLField()
+    # picture = forms.ImageField()
+
+    class Meta():#meta in english refers to something that refers to itself
+        model = UserProfile
+        fields = ('website','picture')
+
+
+
+
+

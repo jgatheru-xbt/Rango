@@ -1,12 +1,11 @@
-<!doctype html>
+{% extends "rango/base.html" %}
+{% load static %}
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rango</title>
-  </head>
-  <body>
+<title>
+  Rango - 
+  {% block title %}Add Page{% endblock title %}
+</title>
+  {% block body %}
     <h1>Add Page in {{category.name}}</h1>
 
     <div>
@@ -31,5 +30,4 @@
             <input type = "submit" name = "add_page_btn" name = "add_page_btn" ><br/>
     <a href = "{% url 'show_category' category.slug %}"> Back to category</a>
     </div>
-  </body>
-</html>
+{% endblock body %}
