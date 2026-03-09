@@ -34,6 +34,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1209600
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rango'
+    'rango',
+    'registration'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +83,17 @@ TEMPLATES = [
 STATICFILES_DIRS = [STATIC_DIR,]
 
 WSGI_APPLICATION = 'tango_with_django.wsgi.application'
+
+REGISTRATION_OPEN = True
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+REGISTRATION_AUTO_LOGIN = True
+
+LOGIN_REDIRECT_URL = '/rango/'
+
+LOGIN_URL = '/accounts/login'
+
 
 
 # Database
@@ -132,4 +147,4 @@ STATIC_URL = 'static/'
 MEDIA_ROOT = MEDIA_DIR # tells django where to look in your file system for media files that have been uploaded or stored
 MEDIA_URL = '/media/' # url toserve them -> the media files
 
-LOGIN_URL = 'rango/login/'
+# LOGIN_URL = 'rango/login/'

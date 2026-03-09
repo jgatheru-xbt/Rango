@@ -16,13 +16,27 @@ Including another URLconf
 """
 
 
-from django.contrib import admin
-from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+from registration.backends.simple.views import RegistrationView
+
+# a new class that redirects the user to the idnex pageif successfull in logging in
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self,user):
+        return '/rango/'
 
 
+# project url routings
 urlpatterns = [
     path('admin/', admin.site.urls, name ='admin'),
-    path('rango/', include('rango.urls')),#maps any urls starting with 'rango/' to be handled by the rango application 
+    path('rango/', include('rango.urls')),#maps any urls starting with 'rango/' to be handled by the rango application
+    path('accounts/',include('registration.backends.simple.urls')),
+    path('accounts/register', MyRegistrationView.as_view(), name = 'registration_register'),
+    # path('accounts/password/change', MyRegistrationView.as_view(), name = 'auth_password_change'),
 ] + static( settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
+
