@@ -2,26 +2,50 @@
 {% extends "rango/base.html" %}
 {% load static %}
 
-<title>
-  Rango -
-  {% block title %}Home Page{% endblock title %}
-</title>
+{% block title %}Home Page{% endblock title %}
 
-{% block  body %}
-    <h1>Rango says ...</h1>
-    <div>
-      hey there
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'styles/rango/index.css' %}">
+{% endblock extra_head %}
 
-      {%if user.is_authenticated %}
-        {{user.username}}
-      {%else%}
-        hey there partner
-      {% endif %}
-      <br />
-      <em>{{boldmessage}}</em><br />
-    </div>
+{% block body %}
+<div class="body-container">
+<div class="left-container">
+  <div class="search-box">
+    <input type="text" name="search-field" placeholder="Search page or category">
+    <button type="submit">Search</button>
+  </div>
+  <h3>Find a Category</h3>
+  <ul>
+    {% if categories %}
+      {% for category in categories %}
+        <li><a href="{% url 'show_category' category.slug %}">{{ category.name }}</a></li>
+      {% endfor %}
+    {% else %}
+      <li>No categories available</li>
+    {% endif %}
+  </ul>
+</div>
+<div class="right-container">
+    <div class="heading-box">
+      <div>
+        <h1>Ready to Rango</h1>
+        <p style="margin: 0; color: #ececec; font-size: 1.1rem;">Find, Add, Share and Rango useful links and resources.</p>
+      </div>
+      <div class="greeting">
+        {% if user.is_authenticated %}
+          {{ user.username }}, welcome back!
+        {% else %}
+          Hey there, partner!
+        {% endif %}
+        <br />
+        <em>{{ boldmessage }}</em>
+      </div>
+  </div>
 
-    <h2>Most Liked Categories</h2>
+<div class="right-bottom-container">
+<article>
+  <h2 class = "subheading">Most Liked Categories</h2>
     {% if categories %}
     <ul>
       {% for category in categories %}
@@ -31,9 +55,10 @@
     {%else%}
       <strong>There are no categories present</strong>
     {%endif%}
+</article>
 
-
-    <h2>Most Viewed pages</h2>
+<article>
+    <h2 class = "subheading">Most Viewed pages</h2>
     {% if top_pages %}
       <ul>
         {%for page in top_pages %}
@@ -42,12 +67,18 @@
         </li>
     {%endfor%}
     {%else%}
-    <h2>No pages available :( </h2>
+    <h2 class = "subheading">No pages available :( </h2>
     {%endif%}
       </ul>
 
-    <div>
+</article>
+</div>
+
+</div>
+</div>
+
+    {% comment %} <div class = "image-container">
         <img src = "{% static "images/rango_mascot.jpg" %}"
         alt = "Rango: a green lizad"/>
-    </div>
+    </div> {% endcomment %}
 {% endblock body%}

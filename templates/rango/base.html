@@ -7,44 +7,60 @@
 {%load rango_template_tags%}
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-        Rango -
-            {% block title %}
-                Tango With Django
-            {% endblock %}
-    </title>
-  </head>
-  <body>
-    <div>
-    {% block body%}
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            Rango -
+                {% block title %}
+                    Tango With Django
+                {% endblock %}
+        </title>
+        <link rel="stylesheet" href="{% static 'styles/rango/base.css' %}">
+        {% block extra_head %}
+        <!-- link tags here -->
+        {% endblock extra_head %}
+
+        {% comment %} bootstrap css  {% endcomment %}
+
+    </head>
+
+    <body>
+        <div class = "navbar">
+
+            <h2>Rango</h2>
+
+
+            <ul>
+                <li><a href = "#">Index</a></li>
+                <li><a href = "{% url 'index' %}">Index</a></li>
+                <li><a href = "{% url 'about'%}">about</a></li>
+            </ul>
+
+            <ul>
+                {%if user.is_authenticated%}
+                    <li><a href = "{% url 'restricted' %}">Restricted Page</a></li>
+                    <li><a href = "{% url 'auth_logout' %}?next - /rango/">Logout</a></li>
+                {%else%}
+                    <li><a href = "{% url 'auth_login' %}">Log In</a></li>
+                    <li><a href = "{% url 'registration_register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
 
         <div>
-            {% block sidebar%}
-                {% get_category_list %}
-            {%endblock%}
+        {% block body%}
+
+            <div>
+                {% block sidebar%}
+                    {% get_category_list %}
+                {%endblock%}
+            </div>
+        <!--page specific content goes here-->
+        {% endblock %}
         </div>
-    <!--page specific content goes here-->
-    {% endblock %}
-    </div>
 
-    <hr/>
 
-    <div>
-        <ul>
-            {%if user.is_authenticated%}
-                <li><a href = "{% url 'restricted' %}">Restricted Page</a></li>
-                <li><a href = "{% url 'auth_logout' %}?next - /rango/">Logout</a></li>
-            {%else%}
-                <li><a href = "{% url 'auth_login' %}">Log In</a></li>
-                <li><a href = "{% url 'registration_register' %}">Register</a></li>
-            {% endif %}
-                <li><a href = "{% url 'index' %}">Index</a></li>
-                <li><a href = "{% url 'registration_register'%}">Sign Up</a></li>
-                <li><a href = "{% url 'about'%}">about</a></li>
-        </ul>
-    <div/>
+
     </body>
 </html>

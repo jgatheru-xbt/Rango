@@ -1,0 +1,28 @@
+{% extends "rango/base.html" %}
+{% load static %}
+
+{% block title %}Home Page{% endblock title %}
+
+{% block body %}
+<div class="search-container">
+    <h2>Search</h2>
+    <form method="POST" action="{% url 'search' %}">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Enter search query" required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class = "results_container">
+    {% if results %}
+    <h2> Python Search results </h2>
+    <ul>
+        {%for i in results%}
+            <h2><a href= "{{i.link}}"> {{i.title}} </a></h2>
+            <p>{{i.snippet}}</p>
+            <hr>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

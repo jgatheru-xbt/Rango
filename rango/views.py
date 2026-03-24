@@ -9,6 +9,7 @@ from django.shortcuts import (
 )
 from django.urls import reverse
 
+from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.models import Category, Page
 
@@ -142,6 +143,21 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied")
     else:
         return render(request, 'rango/login.html', {})
+
+
+def show_search(request):
+
+    results_list = []
+    if request.method == "POST":
+        query = request.POST["query"]
+        results_list = run_query(query).get("organic_results")
+
+        # print(results_list)
+
+    return render (request, "rango/search.html", {"results":results_list})
+
+
+
 
 def about(request):
     if request.session.test_cookie_worked():
